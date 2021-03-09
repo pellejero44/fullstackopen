@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import Persons from "../src/components/Persons";
-import PersonForm from "../src/components/PersonForm";
-import Filter from "../src/components/Filter";
+import React, { useState, useEffect } from "react";
+import Persons from "./components/Persons";
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
+import personService from "./services/personService";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
   const [showAll, setShowAll] = useState(true);
+
+  useEffect(() => {
+    personService.getAll().then((initPersons) => {
+      setPersons(initPersons);
+    });
+  }, []);
 
   const contactsToShow = showAll
     ? persons
@@ -36,8 +38,24 @@ const App = () => {
   };
 
   const addPerson = () => {
-    setPersons([...persons, { name: newName, number: newNumber }]);
-    resetForm();
+    const personToAdd = getPersonToAdd();
+    personService.create(personToAdd).then((personAdded) => {
+      if (persons.some((p) => p.name === personAdded.name)) {
+        alert(`${newName} is already added to phonebook`);
+      } else {
+        setPersons([...persons, personAdded]);
+        resetForm();
+      }
+    });
+  };
+
+  const getPersonToAdd = () => {
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: Math.max(persons.map((p) => p.id)) + 1,
+    };
+    return personObject;
   };
 
   const updatePerson = (personToUpdate) => {
@@ -45,10 +63,24 @@ const App = () => {
       `${newName} is already added to phonebook, replace the old number with a new one?`
     );
     if (confirm) {
-      let updatedState = persons.filter((p) => p.name !== personToUpdate.name);
-      setPersons([...updatedState, { name: newName, number: newNumber }]);
-      resetForm();
+      personService
+        .update(personToUpdate.id, {
+          ...personToUpdate,
+          number: newNumber,
+        })
+        .then((updatedPerson) => {
+          let updatedState = persons.filter((p) => p.id !== updatedPerson.id);
+          setPersons([...updatedState, updatedPerson]);
+          resetForm();
+        });
     }
+  };
+
+  const deletePerson = (id) => {
+    personService.remove(id).then(() => {
+      const updatedPersons = persons.filter((p) => p.id !== id);
+      setPersons(updatedPersons);
+    });
   };
 
   const resetForm = () => {
@@ -82,7 +114,7 @@ const App = () => {
         onChangeNumberHandler={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={contactsToShow} />
+      <Persons persons={contactsToShow} onDelete={deletePerson} />
     </div>
   );
 };
