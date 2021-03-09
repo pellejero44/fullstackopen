@@ -1,6 +1,6 @@
 import CountryDetail from './CountryDetail';
 
-const CountryList = ({ list, search }) => {
+const CountryList = ({ list, search, show}) => {
   const data = list.filter((country) =>
     country.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -13,7 +13,11 @@ const CountryList = ({ list, search }) => {
     return (
       <div>
         {data.map((country) => (
-          <p key={country.name}> {country.name} </p>
+          <div key={country.name}> 
+            <span> {country.name} </span>
+            <button value={country.name} onClick={show}> Show </button>
+            <br/>
+          </div>
         ))}
       </div>
     );
