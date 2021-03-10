@@ -1,11 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors')
+
 
 morgan.token('body', (req, res) => {
   return JSON.stringify(req.body);
 })
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use(morgan(':method :url - :body'));
 
@@ -32,6 +35,16 @@ let persons = [
   },
 ];
 
+const checkBody = (body, res) => {
+  if (!body.name) {
+    return res.status(400).json({ error: 'name is missing' });
+  }
+
+  if (!body.number) {
+    return res.status(400).json({ error: 'number is missing' });
+  }
+};
+
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 });
@@ -52,17 +65,7 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const { body } = req;
-  if (!body.name) {
-    return res.status(400).json({ error: 'name is missing' });
-  }
-
-  if (!body.number) {
-    return res.status(400).json({ error: 'number is missing' });
-  }
-
-  if (persons.find((el) => el.name === body.name)) {
-    return res.status(400).json({ error: 'name must be unique' });
-  }
+  checkBody(body, res);
 
   const ids = persons.map((p) => p.id);
   const maxId = Math.max(...ids);
@@ -74,6 +77,22 @@ app.post('/api/persons', (req, res) => {
   };
   persons = persons.concat(personToAdd);
   res.json(personToAdd);
+});
+
+app.put('/api/persons/:id', (req, res) => {  
+  const { body } = req;
+  const id = Number(req.params.id);
+  checkBody(body, res);
+  const oldPerson = persons.find((p) => p.id === id);
+  persons = persons.filter((p) => p.id !== id);
+
+  const personToUpdate = {
+    ...oldPerson,
+    name: body.name,
+    number: body.number,
+  };
+  persons = persons.concat(personToUpdate);
+  res.json(personToUpdate);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
