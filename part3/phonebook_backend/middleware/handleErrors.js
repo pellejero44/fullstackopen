@@ -6,6 +6,8 @@ module.exports = (error, request, response, next) => {
       error: 'Value for id cannot be cast',
     });
   } else {
-    return response.status(500).end();
+    return response.status(500).send(
+      error.response.data
+    );
   }
 };

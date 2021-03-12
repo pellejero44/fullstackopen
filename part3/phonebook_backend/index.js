@@ -75,9 +75,9 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: body.number,
   };
 
-  Person.findByIdAndUpdate(id, personToUpdate, {new: true})
-  .then(updatedPerson => res.json(updatedPerson))
-  .catch(err => next(err));
+  Person.findByIdAndUpdate(id, personToUpdate, { new: true })
+    .then((updatedPerson) => res.json(updatedPerson))
+    .catch((err) => next(err));
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -89,15 +89,14 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-app.get('/info', (req, res) => {
-  const length = persons.length;
-  const date = new Date();
-  res.send(`Phonebook has info for ${length} people\n${date}`);
-});
+// app.get('/info', (req, res) => {
+//   const { length } = persons;
+//   const date = new Date();
+//   res.send(`Phonebook has info for ${length} people\n${date}`);
+// });
 
 app.use(notFound);
 app.use(handleErrors);
-
 
 const PORT = 3001;
 app.listen(PORT, () => {

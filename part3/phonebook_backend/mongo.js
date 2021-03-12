@@ -18,6 +18,10 @@ mongoose
     console.error(err);
   });
 
+process.on('uncaughtException', () => {
+  mongoose.connection.disconnect();
+});
+
 // if (process.argv.length === 3) {
 //   Person.find({}).then((result) => {
 //     result.forEach((person) => {
