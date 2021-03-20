@@ -25,7 +25,6 @@ const mostBlogs = (blogs) => {
       const position = acc.findIndex((item) => item.author === val.author);
       console.log(position);
       if (position !== -1) {
-        console.log(acc[position].blogs);
         acc[position].blogs++;
       } else {
         acc.push({
@@ -36,7 +35,7 @@ const mostBlogs = (blogs) => {
 
       return acc;
     },
-    [{ blogs: 0, author: '' }]
+    []
   );
 
   let favorite = blogsCount.reduce((max, obj) =>
@@ -61,7 +60,7 @@ const mostLikes = (blogs) => {
 
       return acc;
     },
-    [{ likes: 0, author: '' }]
+    []
   );
 
   let favorite = blogsCount.reduce((max, obj) =>
