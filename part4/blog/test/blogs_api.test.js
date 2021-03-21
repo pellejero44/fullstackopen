@@ -79,6 +79,31 @@ test('should return status 400 when a blog for blog without title and url', asyn
   expect(blogsContent.length).toBe(initialBlogs.length);
 });
 
+test('should update the likes in the blog', async () => {
+  const { response } = await getAllContentFromBlogs();
+  const { body: blogs } = response;
+  const blogToUpdate = blogs[0];
+  blogToUpdate.likes = 50;
+
+  const secondResponse = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(201);
+
+  expect(secondResponse.body.likes).toBe(blogToUpdate.likes);
+});
+
+test('should delete a blog', async () => {
+  const { response } = await getAllContentFromBlogs();
+  const { body: blogs } = response;
+  const blogToDelete = blogs[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const { blogsContent } = await getAllContentFromBlogs();
+  expect(blogsContent.length).toBe(initialBlogs.length - 1);
+});
+
 afterAll(() => {
   mongoose.connection.close();
   server.close();
