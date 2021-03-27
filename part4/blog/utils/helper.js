@@ -2,6 +2,7 @@
 const { app } = require('../index');
 const supertest = require('supertest');
 const api = supertest(app);
+const User = require('../models/User');
 
 const initialBlogs = [
   {
@@ -13,7 +14,7 @@ const initialBlogs = [
   {
     title: 'tile2',
     author: 'author2',
-    url: 'url2',
+    url: 'url12',
     likes: 3,
   },
 ];
@@ -27,8 +28,14 @@ const getAllContentFromBlogs = async () => {
   }
 }
 
+const getUsers = async () => {
+  const usersDB = await User.find({});
+  return usersDB.map(user => user.toJSON());
+}
+
 module.exports = {
-  getAllContentFromBlogs,
+  getAllContentFromBlogs, 
   api,
-  initialBlogs
+  initialBlogs,
+  getUsers,
 }

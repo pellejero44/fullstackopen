@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { server } = require('../index');
-const Blog = require('../models/blog');
+const Blog = require('../models/Blog');
 const {
   initialBlogs,
   api,
