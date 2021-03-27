@@ -3,7 +3,7 @@ const {Schema, model} = require('mongoose');
 const userSchema = new Schema({
   username: String,
   name: String,
-  password: String,
+  passwordHash: String,
   notes: [
     {
       type: Schema.Types.ObjectId,
