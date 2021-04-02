@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-const Blog = ({ blog }) => {
+
+const Blog = ({ blog, handleUpdate }) => {
   const [visible, setVisible] = useState(false);
   const showWhenVisible = { display: visible ? '' : 'none' };
 
@@ -13,6 +14,14 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => setVisible(!visible);
 
+  const addLike = async () => {
+    const newBlog = JSON.parse(JSON.stringify(blog));
+    newBlog.likes++;
+    newBlog.user =
+      typeof newBlog.user === 'string' ? newBlog.user : newBlog.user?.id;
+    handleUpdate(newBlog);
+  };
+
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -21,7 +30,7 @@ const Blog = ({ blog }) => {
         <a href={blog.url}>{blog.url}</a>
         <br />
         {blog.likes} likes
-        <button>like</button>
+        <button onClick={addLike}>like</button>
         <br />
         {blog.user?.name}
       </div>

@@ -18,7 +18,12 @@ const App = () => {
   });
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    async function fetchData() {
+      const initialBlogs = await blogService.getAll();
+      const sortedBlogs = initialBlogs.sort((a, b) => b.likes - a.likes);
+      setBlogs(sortedBlogs);
+    }
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -75,6 +80,16 @@ const App = () => {
     }, 2000);
   };
 
+  const updateBlog = async (blogObject) => {
+    const updated = await blogService.update(blogObject);
+    const updatedBlogs = blogs
+      .filter((b) => b.id !== blogObject.id)
+      .concat(updated)
+      .sort((a, b) => b.likes - a.likes);
+
+    setBlogs(updatedBlogs);
+  };
+
   const renderCreateBlogForm = () => (
     <Togglable buttonLabel='new blog'>
       <h2>create new</h2>
@@ -118,7 +133,7 @@ const App = () => {
       {renderCreateBlogForm()}
       <h2>blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleUpdate={updateBlog} />
       ))}
     </div>
   );
