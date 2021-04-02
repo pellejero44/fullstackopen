@@ -3,6 +3,7 @@ import Blog from './components/Blog';
 import blogService from './services/blogs';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
+import Togglable from './components/Toggable';
 import Notification from './components/Notification';
 import loginService from './services/loginService';
 
@@ -86,7 +87,7 @@ const App = () => {
   };
 
   const renderCreateBlogForm = () => (
-    <>
+    <Togglable buttonLabel="new blog">
       <h2>create new</h2>
       <BlogForm
         onSubmit={addBlog}
@@ -97,7 +98,7 @@ const App = () => {
         handleAuthorChange={({ target }) => setAuthor(target.value)}
         handleUrlChange={({ target }) => setUrl(target.value)}
       />
-    </>
+     </Togglable>
   );
 
   const renderLoginForm = () => (
