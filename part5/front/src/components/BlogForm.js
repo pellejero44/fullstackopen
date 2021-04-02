@@ -52,13 +52,7 @@ const BlogForm = ({ addBlog }) => {
 };
 
 BlogForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
-  handleTitleChange: PropTypes.func.isRequired,
-  handleAuthorChange: PropTypes.func.isRequired,
-  handleUrlChange: PropTypes.func.isRequired,
+  addBlog: PropTypes.func.isRequired
 };
 
 export default BlogForm;
