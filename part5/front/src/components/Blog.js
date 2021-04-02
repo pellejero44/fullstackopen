@@ -26,7 +26,7 @@ const Blog = ({ blog, handleUpdate, handleRemove, showRemoveButton }) => {
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
-      <button onClick={toggleVisibility}>{visible ? 'hide' : 'View'}</button>
+      <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
       <div style={showWhenVisible}>
         <a href={blog.url}>{blog.url}</a>
         <br />
