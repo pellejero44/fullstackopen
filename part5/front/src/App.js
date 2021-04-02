@@ -90,6 +90,14 @@ const App = () => {
     setBlogs(updatedBlogs);
   };
 
+  const removeBlog = async (blog) => {
+    const option = window.confirm(`remove ${blog.title} by ${blog.author}`);
+    if (option) {
+      await blogService.remove(blog.id);
+    }
+    setBlogs(blogs.filter((b) => b.id !== blog.id));
+  };
+
   const renderCreateBlogForm = () => (
     <Togglable buttonLabel='new blog'>
       <h2>create new</h2>
@@ -133,7 +141,14 @@ const App = () => {
       {renderCreateBlogForm()}
       <h2>blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} handleUpdate={updateBlog} />
+
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleUpdate={updateBlog}
+          handleRemove={() => removeBlog(blog)}
+          showRemoveButton={blog.user.name === user.name}
+        />
       ))}
     </div>
   );
