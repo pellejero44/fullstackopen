@@ -2,13 +2,11 @@ describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
     cy.visit('http://localhost:3000');
-    const user = {
+    cy.addUser({
       username: 'apellejero',
       name: 'angel',
       password: 'abc123ABC',
-    };
-
-    cy.request('POST', 'http://localhost:3001/api/users', user);
+    });
   });
 
   it('Login form is shown', function () {
@@ -46,22 +44,12 @@ describe('Blog app', function () {
 
       describe('and a blog exists', function () {
         beforeEach(function () {
-          cy.request({
-            method: 'POST',
-            url: 'http://localhost:3001/api/blogs',
-            body: {
-              title: 'REM2AsX',
-              author: 's2d',
-              url: 'htt2p:middleware.es',
-              likes: 25,
-            },
-            headers: {
-              Authorization: `Bearer ${
-                JSON.parse(localStorage.getItem('loggedUser')).token
-              }`,
-            },
+          cy.addBlog({
+            title: 'REM2AsX',
+            author: 's2d',
+            url: 'htt2p:middleware.es',
+            likes: 25,
           });
-          cy.visit('http://localhost:3000');
         });
 
         it('it can give like to the blog', () => {
@@ -75,6 +63,39 @@ describe('Blog app', function () {
           cy.contains('REM2AsX').contains('view').click();
           cy.contains('Remove').click();
           cy.contains('REM2AsX').should('not.exist');
+        });
+
+        it('and a the note can not be delete by other user', () => {
+          cy.addUser({
+            username: 'david',
+            name: 'david2',
+            password: 'abc123ABC',
+          });
+
+          cy.login({ username: 'david', password: 'abc123ABC' });
+          cy.contains('REM2AsX').contains('view').click();
+          cy.contains('Remove').should('not.exist');
+        });
+
+        describe('and we have another blog with more likes', function () {
+          beforeEach(function () {
+            cy.addBlog({
+              title: 'note2',
+              author: 'author2',
+              url: 'htt2p:another.es',
+              likes: 50,
+            });
+          });
+
+          const getTitles = el => el.textContent.trim().split(' ')[0];
+
+          it('the notes must be order by number or likes', () => {
+            const expected = ['note2', 'REM2AsX'];
+            cy.get('.blogContainer').then(elements => {
+              const texts = [...elements].map(getTitles);
+              expect(texts).to.deep.eq(expected);
+            });
+          });
         });
       });
     });
