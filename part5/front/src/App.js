@@ -147,7 +147,7 @@ const App = () => {
           blog={blog}
           handleUpdate={updateBlog}
           handleRemove={() => removeBlog(blog)}
-          showRemoveButton={blog.user.name === user.name}
+          showRemoveButton={blog.user?.name === user.name}
         />
       ))}
     </div>
