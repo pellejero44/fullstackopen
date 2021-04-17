@@ -1,9 +1,15 @@
+const CREATED = {
+  type: '@anectote/CREATED',
+};
+
 const VOTE = {
   type: '@anectote/VOTE',
 };
 
+
 const actions = {
-  VOTE
+  CREATED,
+  VOTE, 
 }
 
 export default actions;

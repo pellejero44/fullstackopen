@@ -1,3 +1,5 @@
+import actions from '../actions/anecdoteActions';
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -9,7 +11,7 @@ const anecdotesAtStart = [
 
 const getId = () => (100000 * Math.random()).toFixed(0);
 
-const asObject = (anecdote) => {
+export const asObject = (anecdote) => {
   return {
     content: anecdote,
     id: getId(),
@@ -21,7 +23,9 @@ const initialState = anecdotesAtStart.map(asObject);
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case '@anectote/VOTE':
+    case actions.CREATED.type:
+      return [...state, action.payload];
+    case actions.VOTE.type:
       return state.map((anecdote) => {
         if (anecdote.id === action.payload.id) {
           return {

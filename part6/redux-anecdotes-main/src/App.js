@@ -1,18 +1,28 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import actions from './actions/anecdoteActions';
+import AnecdoteForm from './components/AnecdoteForm';
+import { asObject } from './reducers/anecdoteReducer';
 
 const App = () => {
   const anecdotes = useSelector((state) => state);
   const dispatch = useDispatch();
-
   const vote = (id) => {
     const action = {
       ...actions.VOTE,
       payload: {
-        id
-      }
-    }
+        id,
+      },
+    };
+    dispatch(action);
+  };
+
+  const createAnecdote = (anecdote) => {
+    const payload = asObject(anecdote);
+    const action = {
+      ...actions.CREATED,
+      payload,
+    };
     dispatch(action);
   };
 
@@ -28,13 +38,7 @@ const App = () => {
           </div>
         </div>
       ))}
-      <h2>create new</h2>
-      <form>
-        <div>
-          <input />
-        </div>
-        <button>create</button>
-      </form>
+      <AnecdoteForm create={createAnecdote} />
     </div>
   );
 };
