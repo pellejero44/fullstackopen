@@ -19,7 +19,30 @@ export const asObject = (anecdote) => {
   };
 };
 
+export const createAnecdote = (content) => {
+  const payload = asObject(content);
+  return {
+    ...actions.CREATED,
+    payload,
+  };
+};
+
+export const voteAnedote = (id) => {
+  return {
+    ...actions.VOTE,
+    payload: {
+      id,
+    },
+  };
+};
+
 const initialState = anecdotesAtStart.map(asObject);
+
+export const sortAnecdotesByVotes = (anecdotes) => {
+  return [...anecdotes].sort((a, b) => {
+    return b.votes - a.votes;
+  });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
