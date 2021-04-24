@@ -44,7 +44,7 @@ export const sortAnecdotesByVotes = (anecdotes) => {
   });
 };
 
-const reducer = (state = initialState, action) => {
+const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.CREATED.type:
       return [...state, action.payload];
@@ -63,4 +63,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export default reducer;
+export default anecdoteReducer;

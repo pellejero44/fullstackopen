@@ -1,5 +1,6 @@
 import React from 'react';
 import { createAnecdote } from '../reducers/anecdoteReducer';
+import { createNotification } from '../reducers/notificationReducer';
 import { connect } from 'react-redux';
 
 const AnecdoteForm = (props) => {
@@ -8,6 +9,7 @@ const AnecdoteForm = (props) => {
     const content = event.target.anecdote.value;
     event.target.anecdote.value = '';
     props.createAnecdote(content);
+    props.createNotification(`you added anecdote '${content}'`)
   };
 
   return (
@@ -29,7 +31,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = { createAnecdote };
+const mapDispatchToProps = { createAnecdote, createNotification };
 
 const ConnectedAnecdoteForm = connect(
   mapStateToProps,

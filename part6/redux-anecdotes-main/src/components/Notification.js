@@ -1,17 +1,35 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { deleteNotification } from '../reducers/notificationReducer'
 
-import React from 'react'
-
-const Notification = () => {
+const Notification = (props) => {
   const style = {
     border: 'solid',
     padding: 10,
-    borderWidth: 1
-  }
-  return (
-    <div style={style}>
-      render here notification...
-    </div>
-  )
-}
+    borderWidth: 1,
+  };
 
-export default Notification
+  if (props.notification === '') {
+    return null;
+  } else {
+    setTimeout(() => {
+      props.deleteNotification();
+    }, 3000);
+  }
+
+  return <div style={style}>{props.notification}</div>;
+};
+
+const mapStateToProps = (state) => {
+  return {
+    notification: state.notification,
+  };
+};
+
+const mapDispatchToProps = {deleteNotification}
+
+const ConnectedNotification = connect(
+  mapStateToProps,
+  mapDispatchToProps
+  )(Notification);
+export default ConnectedNotification;
