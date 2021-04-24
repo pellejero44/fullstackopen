@@ -1,4 +1,5 @@
 import actions from '../actions/anecdoteActions';
+import { anecdotesService } from '../services/anecotes';
 
 const getId = () => (100000 * Math.random()).toFixed(0);
 
@@ -10,18 +11,26 @@ export const asObject = (anecdote) => {
   };
 };
 
-export const initAnecdotes = payload => {
-  return {
-    ...actions.INIT,
-    payload,
+export const initAnecdotes = () => {
+  return async (dispatch) => {
+    const payload = await anecdotesService.getAll();
+
+    dispatch({
+      ...actions.INIT,
+      payload,
+    });
   };
 };
 
 export const createAnecdote = (content) => {
-  const payload = asObject(content);
-  return {
-    ...actions.CREATED,
-    payload,
+  return async (dispatch) => {
+    const anecdote = asObject(content);
+    const payload = await anecdotesService.create(anecdote);
+
+    dispatch({
+      ...actions.CREATED,
+      payload,
+    });
   };
 };
 
