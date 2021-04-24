@@ -1,3 +1,8 @@
+const INIT = {
+  type: '@anectote/INIT',
+};
+
+
 const CREATED = {
   type: '@anectote/CREATED',
 };
@@ -8,6 +13,7 @@ const VOTE = {
 
 
 const actions = {
+  INIT,
   CREATED,
   VOTE, 
 }
