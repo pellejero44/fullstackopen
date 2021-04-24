@@ -35,18 +35,13 @@ export const createAnecdote = (content) => {
 };
 
 export const voteAnedote = (id) => {
-  return {
-    ...actions.VOTE,
-    payload: {
-      id,
-    },
+  return async (dispatch) => {
+    const payload = await anecdotesService.vote(id);
+    dispatch({
+      ...actions.VOTE,
+      payload
+    });
   };
-};
-
-export const sortAnecdotesByVotes = (anecdotes) => {
-  return [...anecdotes].sort((a, b) => {
-    return b.votes - a.votes;
-  });
 };
 
 const anecdoteReducer = (state = [], action) => {
@@ -59,8 +54,7 @@ const anecdoteReducer = (state = [], action) => {
       return state.map((anecdote) => {
         if (anecdote.id === action.payload.id) {
           return {
-            ...anecdote,
-            votes: anecdote.votes + 1,
+            ...action.payload
           };
         }
         return anecdote;

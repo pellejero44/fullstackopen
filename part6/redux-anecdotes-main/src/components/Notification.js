@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteNotification } from '../reducers/notificationReducer'
 
 const Notification = (props) => {
   const style = {
@@ -11,10 +10,6 @@ const Notification = (props) => {
 
   if (props.notification === '') {
     return null;
-  } else {
-    setTimeout(() => {
-      props.deleteNotification();
-    }, 3000);
   }
 
   return <div style={style}>{props.notification}</div>;
@@ -26,10 +21,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {deleteNotification}
-
 const ConnectedNotification = connect(
   mapStateToProps,
-  mapDispatchToProps
   )(Notification);
 export default ConnectedNotification;

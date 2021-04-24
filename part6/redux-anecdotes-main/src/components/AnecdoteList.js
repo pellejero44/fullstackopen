@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 const AnecdoteList = (props) => {
   const vote = (id, content) => {
     props.voteAnedote(id);
-    props.createNotification(`you voted '${content}'`);
+    props.createNotification(`you voted '${content}'`, 10);
   };
 
   return (

@@ -1,17 +1,24 @@
 import notificactionActions from '../actions/notificactionActions';
 
-export const createNotification = (payload) => {
-  return  {
-    ...notificactionActions.CREATED,
-    payload,
-  }
+export const createNotification = (payload, time) => {
+  return async (dispatch) => {
+    dispatch({
+      ...notificactionActions.CREATED,
+      payload,
+    });
+    setTimeout(() => {
+      dispatch({
+        ...notificactionActions.DELETED,
+      });
+    }, time * 1000);
+  };
 };
 
 export const deleteNotification = () => {
   return {
     ...notificactionActions.DELETED,
-  }
-}
+  };
+};
 
 const notificationReducer = (state = '', action) => {
   switch (action.type) {
