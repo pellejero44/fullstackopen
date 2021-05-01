@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useHistory,
+} from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -82,6 +87,7 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+  const history = useHistory();
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
@@ -94,6 +100,12 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+
+    props.setNotification(`a new anecdote ${content} created`);
+    history.push('/');
+    setTimeout(() => {
+      props.setNotification('');
+    }, 10000);
   };
 
   return (
@@ -173,6 +185,7 @@ const App = () => {
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
+        {notification}
         <Route
           exact
           path='/'
@@ -183,7 +196,9 @@ const App = () => {
         <Route
           exact
           path='/create'
-          render={() => <CreateNew addNew={addNew} />}
+          render={() => (
+            <CreateNew setNotification={setNotification} addNew={addNew} />
+          )}
         />
         <Route
           exact
