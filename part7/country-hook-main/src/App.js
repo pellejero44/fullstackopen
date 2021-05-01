@@ -20,15 +20,15 @@ const useCountry = (name) => {
 
   useEffect(() => {
     if (name !== '') {
-      axios
-        .get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
-        .then((response) => {
-          console.log(response);
+      const fetchCountry = async () => {
+        try{
+          const response = await axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`);
           setCountry({ data: response.data[0], found: true });
-        })
-        .catch(() => {
+        } catch{
           setCountry({ found: false });
-        });
+        }       
+      }
+      fetchCountry();
     }
   }, [name]);
 
