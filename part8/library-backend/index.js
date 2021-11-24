@@ -95,6 +95,11 @@ const typeDefs = gql`
       published: Int!
       genres: [String]!
     ): Book
+
+    editAuthor(    
+        name: String!    
+        setBornTo: Int!  
+    ): Author
   }
 `;
 
@@ -114,7 +119,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: (root, args) => {
       if (books.find((b) => b.title === args.title)) {
         throw new UserInputError('title must be unique', {
           invalidArgs: args.title,
@@ -134,6 +139,15 @@ const resolvers = {
       const book = { ...args, author, id: uuid() };
       books.push(book);
       return book;
+    },
+    editAuthor: (root, args) => {
+      const authorIndex = authors.findIndex((a) => a.name === args.name);
+      if (authorIndex === -1) return null;
+
+      const author = authors[authorIndex];
+      const updateAuthor = { ...author, born: args.setBornTo };
+      authors[authorIndex] = updateAuthor;
+      return updateAuthor;
     },
   },
 };
