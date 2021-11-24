@@ -103,6 +103,16 @@ const resolvers = {
     allAuthors: () => authors,
     allBooks: () => books,
   },
+  Author: {
+    bookCount: (root) => {
+      const booksFound = books.filter((b) => b.author.id === root.id);
+      if (!booksFound) {
+        return 0;
+      } else {
+        return booksFound.length;
+      }
+    },
+  },
   Mutation: {
     addBook: async (root, args) => {
       if (books.find((b) => b.title === args.title)) {
@@ -111,7 +121,17 @@ const resolvers = {
         });
       }
 
-      const book = { ...args, id: uuid() };
+      let author = authors.find((a) => a.name === args.author);
+      if (!author) {
+        author = {
+          name: args.author,
+          id: uuid(),
+          bookCount: 1,
+        };
+        authors.push(author);
+      }
+
+      const book = { ...args, author, id: uuid() };
       books.push(book);
       return book;
     },
