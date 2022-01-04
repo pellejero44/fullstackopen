@@ -1,3 +1,4 @@
+require('./mongo');
 const { ApolloServer, gql } = require('apollo-server');
 const { v1: uuid } = require('uuid');
 
