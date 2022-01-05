@@ -42,6 +42,7 @@ const typeDefs = gql`
     allAuthors: [Author!]!
     allBooks: [Book!]!
     me: User
+    bookCount: String!
   }
 
   type Mutation {
@@ -62,6 +63,9 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
+    bookCount: () => {
+      return Book.collection.countDocuments();
+    },
     allAuthors: async (root, args) => {
       return await Author.find({});
     },
@@ -73,10 +77,12 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: (root) => Book.collection.countDocuments(),
+    bookCount: (root) => {
+      return Book.collection.countDocuments({ author: root.name });
+    },
   },
   Mutation: {
-    addBook: async (root, args, {currentUser}) => {
+    addBook: async (root, args, { currentUser }) => {
       if (!currentUser) throw new AuthenticationError('not authenticated');
 
       const bookExists = await Book.findOne({ title: args.title });
@@ -111,7 +117,7 @@ const resolvers = {
         });
       }
     },
-    editAuthor: async (root, args, {currentUser}) => {
+    editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) throw new AuthenticationError('not authenticated');
 
       const author = await Author.findOne({ name: args.name });
@@ -165,7 +171,7 @@ const server = new ApolloServer({
     const auth = req ? req.headers.authorization : null;
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const { username } = jwt.verify(auth.substring(7), JWT_SECRET);
-      const currentUser = await User.findOne(username);
+      const currentUser = await User.findOne({ username });
       return { currentUser };
     }
   },

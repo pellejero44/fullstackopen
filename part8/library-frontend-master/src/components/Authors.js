@@ -15,7 +15,10 @@ const Authors = (props) => {
   });
 
   useEffect(() => {
-    if (props.result.data) setName(props.result.data.allAuthors[0]?.name ?? 'undefined')
+    
+    if (props.result.data) {
+      setName(props.result.data.allAuthors[0]?.name ?? 'undefined')
+    } 
   }, [props.result.data])
 
   if (!props.show) {
