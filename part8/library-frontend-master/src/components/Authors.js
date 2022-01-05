@@ -15,7 +15,7 @@ const Authors = (props) => {
   });
 
   useEffect(() => {
-    if (props.result.data) setName(props.result.data.allAuthors[0].name)
+    if (props.result.data) setName(props.result.data.allAuthors[0]?.name ?? 'undefined')
   }, [props.result.data])
 
   if (!props.show) {
@@ -41,7 +41,7 @@ const Authors = (props) => {
     setBorn('');
   };
 
-  const authors = props.result.data.allAuthors;
+  const authors = props.result.data?.allAuthors ?? [];
 
   return (
     <div>
